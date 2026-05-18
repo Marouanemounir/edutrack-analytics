@@ -1,0 +1,16 @@
+# Secrets
+.env
+
+# Données générées
+data/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.ipynb_checkpoints/
+
+# Logs
+*.log
+logs/
