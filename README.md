@@ -511,7 +511,7 @@ du -sh ~/projet-bigdata/    # taille totale du projet
 
 | Nom | Filière | Rôle |
 |-----|---------|------|
-| — | II-BDCC | Développement pipeline Big Data |
+| Marouane Mounir | II-BDCC | Développement pipeline Big Data |
 
 ---
 
