@@ -145,3 +145,18 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+def clean_registrations(spark):
+    """Nettoyage des inscriptions depuis PostgreSQL."""
+    print("  → Nettoyage : registrations")
+    df = spark.read.parquet(f"{BRONZE}/registrations/")
+    silver = df \
+        .dropDuplicates(["registration_id"]) \
+        .filter(col("student_id").isNotNull()) \
+        .withColumn("registration_date",
+                    to_date(col("registration_date"), "yyyy-MM-dd"))
+    silver.write.format("delta").mode("overwrite") \
+      .option("overwriteSchema", "true") \
+      .save(f"{SILVER}/registrations/")
+    print(f"     ✓ {silver.count()} inscriptions écrites")

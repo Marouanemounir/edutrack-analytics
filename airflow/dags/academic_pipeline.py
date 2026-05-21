@@ -21,9 +21,12 @@ import sys
 default_args = {
     "owner":            "bigdata-team",
     "depends_on_past":  False,
-    "email_on_failure": False,
-    "retries":          1,
-    "retry_delay":      timedelta(minutes=5),
+    "retries":          2,
+    "retry_delay":      timedelta(minutes=3),
+    "on_failure_callback": lambda context: print(
+        f"❌ ÉCHEC : {context['task_instance'].task_id} "
+        f"à {context['execution_date']}"
+    ),
 }
 
 
@@ -90,5 +93,11 @@ with DAG(
         doc_md="Calcul des KPIs et agrégations Silver → Gold (Delta Lake)",
     )
 
-    # ── Ordre d'exécution (dépendances) ─────────────────────────────────────
-    start >> ingest_bronze >> bronze_silver >> silver_gold >> end
+    quality_check = PythonOperator(
+    task_id="quality_check",
+    python_callable=run_spark_job,
+    op_kwargs={"module_name": "quality_check"},
+    doc_md="Contrôle qualité des données Bronze avant transformation",
+    )
+    # Nouvelle chaîne
+    start >> ingest_bronze >> quality_check >> bronze_silver >> silver_gold >> end

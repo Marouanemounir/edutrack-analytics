@@ -6,7 +6,7 @@ volumes:
   minio_data:
   postgres_data:
   airflow_logs:
-  superset_home:
+  superset_home: 
 
 x-airflow-common:
   &airflow-common
@@ -155,3 +155,5 @@ services:
     command: bash -c "pip install --quiet pyhive thrift thrift-sasl && superset db upgrade && superset fab create-admin --username admin --password admin --firstname Admin --lastname User --email admin@academic.local && superset init && gunicorn --bind 0.0.0.0:8088 --workers 2 --timeout 120 'superset.app:create_app()'"
     networks:
       - bigdata
+
+
